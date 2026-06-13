@@ -9,7 +9,7 @@ To bootstrap a new Student Attendance Tracker workspace environment, execute the
 ```bash
 ./setup_project.sh
 
----
+```
 
 ### How to Trigger the Archive Feature (Signal Trap Testing)
 The deployment controller features a built-in process management signal trap designed to handle unexpected execution termination gracefully (`SIGINT`). 
