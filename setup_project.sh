@@ -108,14 +108,12 @@ cat << 'INNER_EOF' > "$TARGET_DIR/Helpers/config.json"
     "total_sessions": 15
 }
 INNER_EOF
-
 cat << LOGEOF > "$TARGET_DIR/reports/reports.log"
-====================================================================
-STUDENT ATTENDANCE TRACKER - ENVIRONMENT LOG SYSTEM
-====================================================================
-[\$(date '+%Y-%m-%d %H:%M:%S')] SYSTEM: Environment successfully bootstrapped.
-[\$(date '+%Y-%m-%d %H:%M:%S')] STATUS: Logging channel initialized.
-====================================================================
+--- Attendance Report Run: \$(date '+%Y-%m-%d %H:%M:%S') ---
+[\$(date '+%Y-%m-%d %H:%M:%S')] ALERT SENT TO bob@example.com: URGENT: Bob Smith, your attendance is 46.7%.
+You will fail this class.
+[\$(date '+%Y-%m-%d %H:%M:%S')] ALERT SENT TO charlie@example.com: URGENT: Charlie Davis, your attendance is 26.7%.
+You will fail this class.
 LOGEOF
 echo "[+] Source file arrays deployed successfully."
 
