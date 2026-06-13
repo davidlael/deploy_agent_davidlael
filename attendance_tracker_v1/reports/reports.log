@@ -1,0 +1,6 @@
+====================================================================
+STUDENT ATTENDANCE TRACKER - ENVIRONMENT LOG SYSTEM
+====================================================================
+[$(date '+%Y-%m-%d %H:%M:%S')] SYSTEM: Environment successfully bootstrapped.
+[$(date '+%Y-%m-%d %H:%M:%S')] STATUS: Logging channel initialized.
+====================================================================
