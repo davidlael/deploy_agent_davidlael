@@ -1,8 +1,18 @@
+#!/bin/bash
+
+# =======================================================================
+# Project: Automated Project Bootstrapping & Process Management
+# Script Name: setup_project.sh
+# Description: Automates workspace creation, dynamic JSON configuration,
+#              environment validation, and robust SIGINT process handling.
+# =======================================================================
+
+# --- 1. SIGNAL TRAP IMPLEMENTATION (Process Management & Error Cleanup) ---
 cleanup_trap() {
     echo -e "\n\n[!] SIGINT (Ctrl+C) detected! Initiating emergency cleanup sequence..."
-    if [ -d "$TARGET_DIR" ]; then
+    if [ -n "$TARGET_DIR" ] && [ -d "$TARGET_DIR" ]; then
         echo "[*] Bundling partial project state into an archive..."
-        ARCHIVE_NAME="attendance_tracker_${USER_INPUT}_archive"
+        ARCHIVE_NAME="${TARGET_DIR}_archive"
         tar -czf "${ARCHIVE_NAME}.tar.gz" "$TARGET_DIR" 2>/dev/null
         echo "[+] Archive successfully created: ${ARCHIVE_NAME}.tar.gz"
         echo "[*] Cleaning up incomplete directory to keep workspace spotless..."
@@ -15,14 +25,17 @@ cleanup_trap() {
     exit 1
 }
 trap 'cleanup_trap' SIGINT
+
+# --- 2. INPUT ACQUISITION & WORKSPACE SETUP (Directory & Automation) ---
 echo "===================================================="
 echo "    AUTOMATED ATTENDANCE TRACKER PROJECT FACTORY     "
 echo "===================================================="
 
 read -p "Enter a unique identifier for your tracker workspace: " USER_INPUT
 
-if [ -z "$USER_INPUT" ]; then
-    echo "[X] Error: Identifier cannot be empty. Terminating setup."
+# Sanitize input: Ensure it's not empty and contains valid directory characters
+if [ -z "$USER_INPUT" ] || [[ "$USER_INPUT" =~ [^a-zA-Z0-9_-] ]]; then
+    echo "[X] Error: Identifier must be alphanumeric and cannot be empty."
     exit 1
 fi
 
@@ -34,8 +47,10 @@ if [ -d "$TARGET_DIR" ]; then
     exit 1
 fi
 
-mkdir -p "$TARGET_DIR/Helpers" "$TARGET_DIR/reports"
+mkdir -p "$TARGET_DIR/Helpers" "$TARGET_DIR/reports" || { echo "[X] Error: Write permissions denied."; exit 1; }
 echo "[+] Structure mapped: /Helpers and /reports directories created successfully."
+
+# --- 3. INJECT SOURCE CODE FILES ---
 echo -e "\n[*] Populating application source assets..."
 
 cat << 'INNER_EOF' > "$TARGET_DIR/attendance_checker.py"
@@ -96,6 +111,8 @@ INNER_EOF
 
 touch "$TARGET_DIR/reports/reports.log"
 echo "[+] Source file arrays deployed successfully."
+
+# --- 4. DYNAMIC CONFIGURATION WITH USER VALIDATION (Config & Env Validation) ---
 echo -e "\n[*] Initiating Dynamic Configuration..."
 read -p "Do you want to update the default attendance thresholds? (y/N): " UPDATE_CHOICE
 
@@ -103,19 +120,50 @@ WARNING_VAL=75
 FAILURE_VAL=50
 
 if [[ "$UPDATE_CHOICE" =~ ^[Yy]$ ]]; then
-    read -p "Enter Warning Threshold percentage (Default 75): " USER_WARN
-    if [ -n "$USER_WARN" ] && [[ "$USER_WARN" =~ ^[0-9]+$ ]]; then WARNING_VAL=$USER_WARN; fi
-    read -p "Enter Failure Threshold percentage (Default 50): " USER_FAIL
-    if [ -n "$USER_FAIL" ] && [[ "$USER_FAIL" =~ ^[0-9]+$ ]]; then FAILURE_VAL=$USER_FAIL; fi
+    # Strict numeric validation loop for Warning Threshold
+    while true; do
+        read -p "Enter Warning Threshold percentage (0-100) [Default 75]: " USER_WARN
+        if [ -z "$USER_WARN" ]; then
+            break
+        elif [[ "$USER_WARN" =~ ^[0-9]+$ ]] && [ "$USER_WARN" -ge 0 ] && [ "$USER_WARN" -le 100 ]; then
+            WARNING_VAL=$USER_WARN
+            break
+        else
+            echo "[X] Invalid input. Please enter a valid number between 0 and 100."
+        fi
+    done
 
+    # Strict numeric validation loop for Failure Threshold
+    while true; do
+        read -p "Enter Failure Threshold percentage (0-100) [Default 50]: " USER_FAIL
+        if [ -z "$USER_FAIL" ]; then
+            break
+        elif [[ "$USER_FAIL" =~ ^[0-9]+$ ]] && [ "$USER_FAIL" -ge 0 ] && [ "$USER_FAIL" -le 100 ]; then
+            FAILURE_VAL=$USER_FAIL
+            break
+        else
+            echo "[X] Invalid input. Please enter a valid number between 0 and 100."
+        fi
+    done
+
+    # In-place stream editing manipulation
     sed -i.bak -E "s/(\"warning\": *)[0-9]+/\1$WARNING_VAL/" "$TARGET_DIR/Helpers/config.json"
     sed -i.bak -E "s/(\"failure\": *)[0-9]+/\1$FAILURE_VAL/" "$TARGET_DIR/Helpers/config.json"
     rm -f "$TARGET_DIR/Helpers/config.json.bak"
+    echo "[+] Configuration successfully updated -> Warning: ${WARNING_VAL}%, Failure: ${FAILURE_VAL}%"
+else
+    echo "[*] Skipping customization. Retaining standard system defaults."
 fi
+
+# --- 5. ENVIRONMENT VALIDATION (Health Check) ---
 echo -e "\n[*] Running System Environment Health Check..."
 if command -v python3 &> /dev/null; then
-    python3 --version
+    PYTHON_VERSION=$(python3 --version)
+    echo "[SUCCESS] Environment validation passed: $PYTHON_VERSION"
+else
+    echo "[WARNING] System Core Alert: 'python3' was not detected on this system architecture."
 fi
+
 echo -e "\n===================================================="
 echo "[🎉] BOOTSTRAPPING COMPLETE!"
 echo "===================================================="
