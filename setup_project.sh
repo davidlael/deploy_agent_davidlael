@@ -109,7 +109,14 @@ cat << 'INNER_EOF' > "$TARGET_DIR/Helpers/config.json"
 }
 INNER_EOF
 
-touch "$TARGET_DIR/reports/reports.log"
+cat << LOGEOF > "$TARGET_DIR/reports/reports.log"
+====================================================================
+STUDENT ATTENDANCE TRACKER - ENVIRONMENT LOG SYSTEM
+====================================================================
+[\$(date '+%Y-%m-%d %H:%M:%S')] SYSTEM: Environment successfully bootstrapped.
+[\$(date '+%Y-%m-%d %H:%M:%S')] STATUS: Logging channel initialized.
+====================================================================
+LOGEOF
 echo "[+] Source file arrays deployed successfully."
 
 # --- 4. DYNAMIC CONFIGURATION WITH USER VALIDATION (Config & Env Validation) ---
