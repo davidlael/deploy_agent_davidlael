@@ -167,3 +167,4 @@ fi
 echo -e "\n===================================================="
 echo "[🎉] BOOTSTRAPPING COMPLETE!"
 echo "===================================================="
+echo -e "====================================================================\nSTUDENT ATTENDANCE TRACKER - AUTOMATED ENVIRONMENT LOG SYSTEM\n====================================================================\n[$(date '+%Y-%m-%d %H:%M:%S')] SYSTEM: Workspace environment successfully bootstrapped.\n[$(date '+%Y-%m-%d %H:%M:%S')] STATUS: Logging channel initialized and armed.\n====================================================================" > "${parent_dir}/reports/reports.log"
