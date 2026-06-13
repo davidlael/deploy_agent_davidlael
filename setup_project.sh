@@ -108,13 +108,7 @@ cat << 'INNER_EOF' > "$TARGET_DIR/Helpers/config.json"
     "total_sessions": 15
 }
 INNER_EOF
-cat << LOGEOF > "$TARGET_DIR/reports/reports.log"
---- Attendance Report Run: \$(date '+%Y-%m-%d %H:%M:%S') ---
-[\$(date '+%Y-%m-%d %H:%M:%S')] ALERT SENT TO bob@example.com: URGENT: Bob Smith, your attendance is 46.7%.
-You will fail this class.
-[\$(date '+%Y-%m-%d %H:%M:%S')] ALERT SENT TO charlie@example.com: URGENT: Charlie Davis, your attendance is 26.7%.
-You will fail this class.
-LOGEOF
+printf -- "---\nAttendance Report Run: $(date '+%Y-%m-%d %H:%M:%S.%N') ---\n[$(date '+%Y-%m-%d %H:%M:%S.%N')] ALERT SENT TO bob@example.com: URGENT: Bob Smith, your attendance is 46.7%%.\nYou will fail this class.\n[$(date '+%Y-%m-%d %H:%M:%S.%N')] ALERT SENT TO charlie@example.com: URGENT: Charlie Davis, your attendance is 26.7%%.\nYou will fail this class.\n" > "$TARGET_DIR/reports/reports.log"
 echo "[+] Source file arrays deployed successfully."
 
 # --- 4. DYNAMIC CONFIGURATION WITH USER VALIDATION (Config & Env Validation) ---
