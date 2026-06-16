@@ -26,3 +26,11 @@ deploy_agent_davidlael/
     │   └── config.json      # Dynamic target metrics for system alert runs
     └── reports/             # Execution logs and monitoring output
         └── reports.log      # Output logging streams with real-time timestamps
+
+---
+
+## 📹 Project Walkthrough Video
+
+Click the link below to watch the full 5-minute technical demonstration and code logic walkthrough:
+
+👉 **[Watch the Student Attendance Tracker Walkthrough Video]( https://drive.google.com/file/d/1UTaRICbDHoQG61Ln6NkqnLu4Gfh7HfLQ/view?usp=sharing)**
