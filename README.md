@@ -1,22 +1,28 @@
-# Automated Project Bootstrapping & Process Management Factory
+# Automated Project Bootstrapping & Process Management Framework
 
-This repository contains an automated environment initialization infrastructure designed to systematically deploy the workspace configuration for a Student Attendance Tracker application.
+An enterprise-grade Infrastructure as Code (IaC) shell solution designed to automate the rapid generation, deployment, and validation of isolated workspace environments for a **Student Attendance Tracker** application.
 
-## Deployment and Usage Guide
+---
 
-### How to Run the Script
-To bootstrap a new Student Attendance Tracker workspace environment, execute the master deployment script from the root directory using your bash runtime interpreter:
-```bash
-./setup_project.sh
+## 💡 The Problem & The Solution
 
-```
+* **The Problem:** Setting up software workspaces manually introduces immense operational risks. Variations in folder configurations, unvalidated parameters, missing software dependencies, and orphaned directories from aborted tasks result in broken pipelines and lost engineering time.
+* **The Solution:** This project replaces manual actions with an automated controller script (`setup_project.sh`). In under two seconds, it builds an immaculate workspace, runs automated host system diagnostics, rewrites configuration state dynamically, and cleans up after itself safely if interrupted.
 
-### How to Trigger the Archive Feature (Signal Trap Testing)
-The deployment controller features a built-in process management signal trap designed to handle unexpected execution termination gracefully (`SIGINT`). 
+---
 
-To trigger and verify this automated archival cleanup mechanism:
-1. Initialize the script by running `./setup_project.sh`.
-2. While the execution process is halted at an interactive user prompt (such as the workspace identifier input or the threshold override choice), issue a manual interrupt command from your keyboard by pressing **`Ctrl + C`**.
-3. The script will catch the signal, prevent a dirty crash, and run the emergency sequence:
-   * It bundles all initialized directory structures into a compressed backup asset named `attendance_tracker_{input}_archive.tar.gz`.
-   * It runs a recursive cleanup (`rm -rf`) to completely scrub the partial workspace directory from your system to maintain an immaculate environment.
+## 🏗️ System Architecture & Folder Layout
+
+When executed successfully, the script instantiates a strict directory topology layout to isolate code logic, data states, and evaluation outputs:
+
+```text
+deploy_agent_davidlael/
+├── setup_project.sh         # The main automation infrastructure engine
+├── README.md                # Comprehensive system documentation
+└── attendance_tracker_{ID}/ # Dynamically generated user workspace
+    ├── attendance_checker.py # Seeded Python application core file
+    ├── Helpers/             # Data and parameter management layer
+    │   ├── assets.csv       # Seeded database containing student records
+    │   └── config.json      # Dynamic target metrics for system alert runs
+    └── reports/             # Execution logs and monitoring output
+        └── reports.log      # Output logging streams with real-time timestamps
